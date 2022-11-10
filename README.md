@@ -50,7 +50,7 @@ returns:
 ```
 {
   [
-    "game_id": 123,
+    "game_id": "123",
     "game_name": "F.E.A.R.",
     "review_text": "Bad game, story and gameplay but fun to mess around with if you have a friend to play co op"
   ]
