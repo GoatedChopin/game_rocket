@@ -19,6 +19,7 @@ list attributes you would like not to be present in the recommended games in the
 
 
 Let's say you want 5 games where reviewers talked about the mechanics and found it interesting.
+You don't want games people describe as easy / short.
 You want games where the author recommended the game and whose review had a positive sentiment overall.
 Here's what you would POST to the /recommend/ endpoint:
 ```
