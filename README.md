@@ -2,6 +2,8 @@
 
 game_rocket is part of a full-stack machine learning project designed to make use of 42,000 Steam game reviews on 5000 unique games.
 
+Reviews were collected using the Steam partner API and SteamDB's top 5000 games (current as of 10/20/2022).
+
 game_rocket is the backend portion of that full-stack application. It interacts with a PostgreSQL database filled with Steam review data using Diesel (Rust crate). The API will accept HTTP requests using the Rocket Rust crate.
 
 ## API (In development)
