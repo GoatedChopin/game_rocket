@@ -9,9 +9,11 @@ game_rocket is the backend portion of that full-stack application. It interacts 
 ## API (In development)
 
 ### /recommend/ endpoint
+```
 POST /recommend/
 Accept: application/json
 Content-Type: application/json
+```
 
 Examples:
 list attributes you would like to be present in the recommended games in the "positive" list.
