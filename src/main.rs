@@ -11,7 +11,7 @@ fn main() {
     use self::schema::game_reviews::dsl::*;
 
     let connection = &mut connect::establish_connection();
-    let reviews = game_reviews
+    let mut reviews = game_reviews
                             // .filter(game_name.eq(String::from("Magazine Editor")))
                             // .filter(author_recommended_game.eq(true))
                             // .limit(10)
@@ -22,26 +22,74 @@ fn main() {
     //     println!("{}", compute_sub_score(&review, Some(vec![String::from("addictive"), String::from("tactical")]), None, true, true));
     //     println!();
     // }
+    // let mut i = 0;
+    // let mut bh = BinaryHeap::from([score_dex::new(-1.0, 0)]);
+    // for review in reviews {
+    //     bh.push(score_dex::new(compute_sub_score(&review, Some(vec![String::from("addictive"), String::from("tactical")]), None, true, true), i));
+    //     i += 1;
+    // }
+    // // let review;
+    // for index in 0..5 {
+    //     // review = bh.pop();
+    //     println!("{:?}", bh.pop())
+    // }
+    let tops = top_scores(reviews, 5, Some(vec![String::from("addictive"), String::from("tactical")]), None, true, true);
+    println!("{:?}", tops)
+}
+
+fn top_scores(mut reviews: Vec<GameReview>, n_reviews: i32, positives: Option<Vec<String>>, negatives: Option<Vec<String>>, author_recommended_game: bool, sentiment: bool) -> Vec<review_payload> {
     let mut i = 0;
-    let mut bh = BinaryHeap::from([score_dex::new(-1.0, -1)]);
-    for review in reviews {
+    let mut bh = BinaryHeap::from([score_dex::new(-1.0, 0)]);
+    for review in &reviews {
         bh.push(score_dex::new(compute_sub_score(&review, Some(vec![String::from("addictive"), String::from("tactical")]), None, true, true), i));
         i += 1;
     }
-    for index in 0..5 {
-        println!("{:?}", bh.pop())
+    let mut top: Vec<review_payload> = Vec::new();
+    let mut s_d;
+    let mut review;
+    let mut payload;
+    for index in 0..n_reviews {
+        if bh.is_empty() {
+            break;
+        }
+        s_d = bh.pop().unwrap();
+        review = &mut reviews[s_d.index];
+        payload = review_payload::from_review(review, s_d.score);
+        top.push(payload);
+        // println!("{:?}", payload);
+
+    }
+    top
+}
+
+#[derive(Debug)]
+struct review_payload {
+    score: f64,
+    game_name: String,
+    game_id: String,
+    review_text: String
+}
+
+impl review_payload {
+    pub fn from_review(review: &GameReview, score: f64) -> review_payload {
+        review_payload { 
+            score: score, 
+            game_name: review.game_name.as_ref().map(|s| s).unwrap().to_string(), 
+            game_id: review.game_id.as_ref().map(|s| s).unwrap().to_string(), 
+            review_text: review.review_text.as_ref().map(|s| s).unwrap().to_string()
+        }
     }
 }
 
 #[derive(Debug)]
 struct score_dex {
     score: f64,
-    index: i32
+    index: usize
 }
 
 impl score_dex {
-    pub fn new(score: f64, index: i32) -> score_dex{
-        score_dex {score: score, index: index}
+    pub fn new(score: f64, index: usize) -> score_dex{
+        score_dex {score, index}
     }
 }
 
