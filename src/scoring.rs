@@ -1,5 +1,6 @@
 use std::{collections::BinaryHeap, cmp::Ordering, str::FromStr};
 use crate::models::GameReview;
+use serde::Serialize;
 
 
 pub fn top_scores(mut reviews: Vec<GameReview>, n_reviews: i32, positives: Option<Vec<String>>, negatives: Option<Vec<String>>, author_recommended_game: bool, sentiment: bool) -> Vec<ReviewPayload> {
@@ -67,7 +68,7 @@ fn compute_sub_score(review: &GameReview, positives: Option<&Vec<String>>, negat
     score
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct ReviewPayload {
     score: f64,
     game_name: String,
