@@ -58,3 +58,8 @@ returns:
 ```
 
 Note that the returned JSON will be a LIST (array) of entries, even if n_games == 1.
+
+For example, if you had game_rocket hosted at 127.0.0.1:8000 you could use curl to make a post request using:
+```
+curl -X POST http://127.0.0.1:8000/recommend -H 'Content-Type: application/json' -d '{"n_reviews": 5, "positives": ["combat", "characters"], "negatives": ["fps"], "author_recommended_game": true, "sentiment": true}'
+```
