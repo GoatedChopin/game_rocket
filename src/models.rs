@@ -2,6 +2,7 @@
 #![allow(unused)]
 #![allow(clippy::all)]
 use crate::schema::game_reviews;
+// use field_accessor::FieldAccessor;
 use diesel::prelude::*;
 
 #[derive(Queryable, Debug, Identifiable)]
@@ -70,3 +71,75 @@ pub struct GameReview {
     pub tactical: Option<f64>,
 }
 
+impl GameReview {
+    pub fn get(self: &GameReview, attr: String) -> f64 {
+        let attr_str = attr.as_str();
+        match attr_str {
+            "author_recommended_game" => {
+                let result = self.author_recommended_game.unwrap();
+                if result == true {
+                    1.0
+                } else {
+                    0.5
+                }
+            },
+            "sentiment" => self.sentiment.unwrap(),
+            "fun" => self.fun.unwrap(),
+            "story" => self.story.unwrap(),
+            "gameplay" => self.gameplay.unwrap(),
+            "graphics" => self.graphics.unwrap(),
+            "combat" => self.combat.unwrap(),
+            "easy" => self.easy.unwrap(),
+            "characters" => self.characters.unwrap(),
+            "music" => self.music.unwrap(),
+            "world" => self.world.unwrap(),
+            "interesting" => self.interesting.unwrap(),
+            "simple" => self.simple.unwrap(),
+            "short" => self.short.unwrap(),
+            "mechanics" => self.mechanics.unwrap(),
+            "achievements" => self.achievements.unwrap(),
+            "difficulty" => self.difficulty.unwrap(),
+            "puzzles" => self.puzzles.unwrap(),
+            "friends" => self.friends.unwrap(),
+            "fast" => self.fast.unwrap(),
+            "original" => self.original.unwrap(),
+            "unique" => self.unique.unwrap(),
+            "community" => self.community.unwrap(),
+            "space" => self.space.unwrap(),
+            "beautiful" => self.beautiful.unwrap(),
+            "challenging" => self.challenging.unwrap(),
+            "strategy" => self.strategy.unwrap(),
+            "soundtrack" => self.soundtrack.unwrap(),
+            "fps" => self.fps.unwrap(),
+            "funny" => self.funny.unwrap(),
+            "horror" => self.horror.unwrap(),
+            "dungeon" => self.dungeon.unwrap(),
+            "shooter" => self.shooter.unwrap(),
+            "atmosphere" => self.atmosphere.unwrap(),
+            "crafting" => self.crafting.unwrap(),
+            "guns" => self.guns.unwrap(),
+            "simulator" => self.simulator.unwrap(),
+            "upgrades" => self.upgrades.unwrap(),
+            "zombies" => self.zombies.unwrap(),
+            "adventure" => self.adventure.unwrap(),
+            "casual" => self.casual.unwrap(),
+            "monsters" => self.monsters.unwrap(),
+            "grinding" => self.grinding.unwrap(),
+            "satisfying" => self.satisfying.unwrap(),
+            "magic" => self.magic.unwrap(),
+            "deep" => self.deep.unwrap(),
+            "sad" => self.sad.unwrap(),
+            "platformer" => self.platformer.unwrap(),
+            "animation" => self.animation.unwrap(),
+            "fantasy" => self.fantasy.unwrap(),
+            "customization" => self.customization.unwrap(),
+            "exploration" => self.exploration.unwrap(),
+            "addictive" => self.addictive.unwrap(),
+            "tactical" => self.tactical.unwrap(),
+            _ => {
+                // println!("{} not in GameReview struct", attr);
+                0.0
+            }
+        }
+    }
+}
