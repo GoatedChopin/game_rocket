@@ -1,24 +1,43 @@
 use game_rocket::connect;
 use diesel::prelude::*;
 use models::*;
-use rocket::{launch, build, post, routes};
-use rocket::serde::{Deserialize, json::{Json, json}};
+use rocket::{launch, post, routes};
+use rocket::serde::{Deserialize, json::Json};
 use scoring::*;
 use game_rocket::*;
 use crate::schema::game_reviews::dsl::game_reviews;
+use rocket::http::{Header, Method, ContentType, Status};
+use rocket::{Request, Response};
+use rocket::fairing::{Fairing, Info, Kind};
 
+pub struct CORS;
+
+#[rocket::async_trait]
+impl Fairing for CORS {
+    fn info(&self) -> Info {
+        Info {
+            name: "Add CORS headers to responses",
+            kind: Kind::Response
+        }
+    }
+
+    async fn on_response<'r>(&self, _request: &'r Request<'_>, response: &mut Response<'r>) {
+        response.set_header(Header::new("Access-Control-Allow-Origin", "*"));
+        response.set_header(Header::new("Access-Control-Allow-Methods", "POST, GET, PATCH, OPTIONS"));
+        response.set_header(Header::new("Access-Control-Allow-Headers", "*"));
+        response.set_header(Header::new("Access-Control-Allow-Credentials", "true"));
+        if _request.method() == Method::Options {
+            let body = "";
+            response.set_header(ContentType::Plain);
+            response.set_sized_body(body.len(), std::io::Cursor::new(body));
+            response.set_status(Status::Ok);
+        }
+    }
+}
 
 #[launch]
 fn rocket() -> _ {
-    // use self::schema::game_reviews::dsl::*;
-
-    // let connection = &mut connect::establish_connection();
-    // let reviews = game_reviews
-    //                         .load::<GameReview>(connection)
-    //                         .expect("Error loading reviews");
-    // let tops = top_scores(reviews, 5, Some(vec![String::from("addictive"), String::from("tactical")]), None, true, true);
-    // println!("{:?}", tops);
-    rocket::build().mount("/recommend", routes![recommend])
+    rocket::build().mount("/recommend", routes![recommend]).attach(CORS)
 }
 
 #[post("/", format="json", data="<game_request>")]
