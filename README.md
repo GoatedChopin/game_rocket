@@ -82,13 +82,17 @@ That is, the data represents reviews from the 5000 top games from SteamDB as of 
 Although some games remain relevant, this state will neglect new game releases, new reviews of current games, etc.
 
 Solution: Periodic scraping of new reviews based on changes in the SteamDB top 5000 list.
+
 A program which checks SteamDB weekly for new games and scrapes top reviews from Steam would keep the data relevant and expand the recommendations of the platform.
+
+Candidate approach(es): Time based trigger | Cron job, AWS Lambda, or Google Cloud Functions
 
 ### 2. Aggregate game data in recommendations
 As of right now (11/24/22), the algorithm shows users reviews based solely on how well the contents of their search match the contents of reviews in the database (and optionally, the sentiment and rating the reviewer gave).
 Many users will want, I think, to be able to consider a game's popularity on the whole when receiving recommendations, which is not currently possible.
 
 Solution: Acquisition of aggregate data from Steam (per game)
+
 Steam displays the % of players who would "recommend" the game after playing it on each game's store page.
 Using this, we could easily add this metric to the recommendation algorithm.
 Granted, some changes would need to be incorporated to both frontend, backend, and database of the application.
@@ -112,5 +116,8 @@ Given either of the changes listed above, Game Rocket will begin relying on live
 In short, the velocity of the data will necessitate a change in approach.
 
 Solution: Database Backups
+
 Perhaps immediately following the program which collects new data, another program will create a backup of the database in long-term storage (AWS S3, GCP Storage, etc).
 This would make the system more fault-tolerant and resilient.
+
+Candidate approach(es): Time based trigger | AWS Lambda and AWS S3 or Google Cloud Functions and Google Cloud Storage
