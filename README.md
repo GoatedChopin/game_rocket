@@ -73,3 +73,44 @@ Which would return something like this:
 {"score":0.2597100491111021,"game_name":"Middle-earth‚Ñ¢: Shadow of Mordor‚Ñ¢","game_id":"241930","review_text":"Love it, gameplay is like batman like the combat and all, u can climb structures like in assassin's creed, I would recommend this game to anyone, even tho not a fan of LOTR, the Nemesis system is amazing, as enemies keeps growing powerful, changes the game."}
 ]
 ```
+
+## Development Roadmap
+
+### 1. Continuous, autonomic data updates
+Currently, the steam review data is in a fixed state.
+That is, the data represents reviews from the 5000 top games from SteamDB as of October 2022.
+Although some games remain relevant, this state will neglect new game releases, new reviews of current games, etc.
+
+Solution: Periodic scraping of new reviews based on changes in the SteamDB top 5000 list.
+A program which checks SteamDB weekly for new games and scrapes top reviews from Steam would keep the data relevant and expand the recommendations of the platform.
+
+### 2. Aggregate game data in recommendations
+As of right now (11/24/22), the algorithm shows users reviews based solely on how well the contents of their search match the contents of reviews in the database (and optionally, the sentiment and rating the reviewer gave).
+Many users will want, I think, to be able to consider a game's popularity on the whole when receiving recommendations, which is not currently possible.
+
+Solution: Acquisition of aggregate data from Steam (per game)
+Steam displays the % of players who would "recommend" the game after playing it on each game's store page.
+Using this, we could easily add this metric to the recommendation algorithm.
+Granted, some changes would need to be incorporated to both frontend, backend, and database of the application.
+
+Frontend
+- Addition of checkbox to include % recommended in the search
+- Slight changes to the POST request upon Form submit.
+
+Backend
+- Addition of percent_recommended to the game_review Struct.
+- Addition of include_percent_recommended flag to the Score function.
+- Addition of include_percent_recommended flag in the accepted parameters in POST requests to the /recommend/ endpoint.
+
+Database
+- Addition of the percent_recommended column in the game_reviews table.
+
+
+### Database backups / redundancy
+Currently, all of the data used in Game Rocket is accessible from my local development environment.
+Given either of the changes listed above, Game Rocket will begin relying on live, changing data.
+In short, the velocity of the data will necessitate a change in approach.
+
+Solution: Database Backups
+Perhaps immediately following the program which collects new data, another program will create a backup of the database in long-term storage (AWS S3, GCP Storage, etc).
+This would make the system more fault-tolerant and resilient.
