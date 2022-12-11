@@ -6,7 +6,7 @@ Reviews were collected using the Steam partner API and SteamDB's top 5000 games 
 
 game_rocket is the backend portion of that full-stack application. It interacts with a PostgreSQL database filled with Steam review data using Diesel (Rust crate). The API will accept HTTP requests using the Rocket Rust crate.
 
-## API (In development)
+## API
 
 ### /recommend/ endpoint
 ```
